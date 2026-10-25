@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flan de queso - Gmail</title>
+<style>
+  :root {
+    --bg: #f6f8fc;
+    --surface: #ffffff;
+    --text: #202124;
+    --muted: #5f6368;
+    --border: #dadce0;
+    --hover: #f1f3f4;
+    --red: #d93025;
+    --blue: #1a73e8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Google Sans", Roboto, "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  /* Barra superior */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    height: 64px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    color: var(--muted);
+    min-width: 120px;
+  }
+  .logo svg { width: 40px; height: 30px; }
+  .search {
+    flex: 1;
+    max-width: 720px;
+    background: #eaf1fb;
+    border-radius: 24px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    color: var(--muted);
+    gap: 14px;
+  }
+  .search svg { width: 20px; height: 20px; fill: var(--muted); }
+  .avatar-top {
+    margin-left: auto;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #1a73e8;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+  }
+
+  /* Panel principal */
+  .main {
+    background: var(--surface);
+    border-radius: 16px;
+    margin: 0 16px 16px;
+    min-height: calc(100vh - 80px);
+    max-width: 1100px;
+  }
+  @media (min-width: 1160px) { .main { margin-left: auto; margin-right: auto; } }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-bottom: 1px solid transparent;
+    color: var(--muted);
+  }
+  .toolbar .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .toolbar .icon-btn:hover { background: var(--hover); }
+  .toolbar svg { width: 20px; height: 20px; fill: var(--muted); }
+
+  .thread { padding: 0 16px 32px 72px; }
+  @media (max-width: 700px) { .thread { padding-left: 16px; padding-right: 8px; } }
+
+  .subject-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 20px;
+  }
+  .subject {
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0;
+  }
+  .chip {
+    background: #e8eaed;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Mensajes */
+  .message {
+    display: flex;
+    gap: 16px;
+    padding: 0 0 20px;
+  }
+  .message + .message {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .avatar {
+    flex: none;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .avatar.me { background: #1a73e8; }
+  .avatar.norma { background: #e8710a; }
+
+  .content { flex: 1; min-width: 0; }
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .sender { font-weight: 500; font-size: 14px; }
+  .to {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .meta svg { width: 20px; height: 20px; fill: var(--muted); }
+
+  .body {
+    margin-top: 18px;
+    line-height: 1.55;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .body p { margin: 0 0 14px; }
+  .body ul, .body ol { margin: 0 0 14px; padding-left: 22px; }
+  .body li { margin-bottom: 2px; }
+  .body .label { margin: 0 0 4px; }
+
+  /* Acciones de respuesta */
+  .reply-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    margin-left: 56px;
+  }
+  .reply-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #747775;
+    color: #444746;
+    background: #fff;
+    border-radius: 18px;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .reply-btn:hover { background: var(--hover); }
+  .reply-btn svg { width: 18px; height: 18px; fill: #444746; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <svg viewBox="0 0 48 36" aria-hidden="true">
+      <path fill="#4285f4" d="M3 36h8V17L0 9v24a3 3 0 0 0 3 3z"/>
+      <path fill="#34a853" d="M37 36h8a3 3 0 0 0 3-3V9l-11 8z"/>
+      <path fill="#fbbc04" d="M37 3v14l11-8V5c0-4-4.6-6.3-7.8-3.9z"/>
+      <path fill="#ea4335" d="M11 17V3l13 9.75L37 3v14L24 26.75z"/>
+      <path fill="#c5221f" d="M0 5v4l11 8V3L7.8 1.1C4.6-1.3 0 1 0 5z"/>
+    </svg>
+    <span>Gmail</span>
+  </div>
+  <div class="search">
+    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    <span>Buscar en el correo</span>
+  </div>
+  <div class="avatar-top">I</div>
+</header>
+
+<main class="main">
+  <div class="toolbar">
+    <div class="icon-btn" title="Volver a Recibidos"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></div>
+    <div class="icon-btn" title="Archivar"><svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68A1.5 1.5 0 0 0 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5 6.5 12H10v-2h4v2h3.5zM5.12 5l.81-1h12l.94 1z"/></svg></div>
+    <div class="icon-btn" title="Eliminar"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg></div>
+    <div class="icon-btn" title="Marcar como no leído"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></div>
+  </div>
+
+  <section class="thread">
+    <div class="subject-row">
+      <h1 class="subject">Flan de queso</h1>
+      <span class="chip">Recibidos</span>
+    </div>
+
+    <!-- Mensaje 1 -->
+    <article class="message">
+      <div class="avatar me">I</div>
+      <div class="content">
+        <div class="header">
+          <div>
+            <div class="sender">Ignacio</div>
+            <div class="to">para Norma</div>
+          </div>
+          <div class="meta">
+            <span>24 nov 2011, 17:49</span>
+            <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10zM12 22C6.48 22 2 17.52 2 12S6.48 2 12 2c1.85 0 3.58.5 5.07 1.38L15.6 4.85A7.97 7.97 0 0 0 12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8c0-.4-.03-.79-.09-1.17l1.6-1.6c.32.9.49 1.86.49 2.77 0 5.52-4.48 10-10 10z" opacity="0"/><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" opacity="0"/><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+          </div>
+        </div>
+        <div class="body">
+          <p>Madre</p>
+          <p>Acá la gente pidió la receta</p>
+          <p>Besos</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mensaje 2 -->
+    <article class="message">
+      <div class="avatar norma">N</div>
+      <div class="content">
+        <div class="header">
+          <div>
+            <div class="sender">Norma</div>
+            <div class="to">para mí</div>
+          </div>
+          <div class="meta">
+            <span>24 nov 2011, 18:32</span>
+            <svg viewBox="0 0 24 24"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+          </div>
+        </div>
+        <div class="body">
+          <p class="label">Ingredientes:</p>
+          <ul>
+            <li>Una lata de leche condensada</li>
+            <li>Un pote grande de queso crema</li>
+            <li>Dos huevos</li>
+            <li>Esencia de vainilla, a gusto</li>
+          </ul>
+
+          <p class="label">Preparación:</p>
+          <ol>
+            <li>Acaramelar la flanera</li>
+            <li>Mezclar en un bowl los ingredientes (sin grumos).</li>
+            <li>Verter la preparación en la flanera acaramelada</li>
+            <li>Hornear a baño maría, casi una hora.</li>
+          </ol>
+
+          <p>Esta receta es para un flan chico. Para una flanera grande, duplicar los ingredientes.</p>
+        </div>
+      </div>
+    </article>
+
+    <div class="reply-actions">
+      <button class="reply-btn" type="button">
+        <svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+        Responder
+      </button>
+      <button class="reply-btn" type="button">
+        <svg viewBox="0 0 24 24" style="transform:scaleX(-1)"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+        Reenviar
+      </button>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
